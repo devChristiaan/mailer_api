@@ -10,7 +10,7 @@ const app = express()
 const PORT = process.env.PORT || 9001
 
 const corsOptions = {
-  origin: "*",
+  origin: process.env.ORIGIN_URL,
   methods: ['POST']
 }
 
@@ -19,31 +19,40 @@ app.use(express.json())
 
 app.post('/api/v1/mailer', (req, res)=>{
 
-  const {name, email, phone, message } = req.body
+  const {name, email, phone, message, answer } = req.body
 
   let transporter = nodemailer.createTransport({
     host: process.env.HOST,
     port: 465,
     secure: true,
     auth: {
-      user: process.env.USERNAME,
+      user: process.env.USER,
       pass: process.env.PASSWORD,
     },
   });
 
   let mailOptions = {
-    from: name,
+    from: email,
     to: process.env.RECEIVER,
     subject: "Contact Form DevChristiaan",
-    text: (
-      <div>
-        <h1>From: {name}</h1>
-        <h2>Email: {email}</h2>
-        <p>Phone: {phone}</p>
-        <p>Message: {message}</p>
-      </div>
-    )
+    html: `<div>
+        <h2>From: ${name} Email: ${email} Phone: ${phone}</h2>
+        <h4>Message: ${message}</h4>
+      </div>`
   };
+
+  if (answer === parseInt(process.env.ANSWER)) {
+    transporter.sendMail(mailOptions, (err, data) => {
+      if (err) {
+        console.log("Error " + err);
+        res.status(417).send("Unable to send message. Please try again later.")
+      } else {
+        res.status(200).send({message: "The cyber monkies delivered your email successfully!", info: data});
+      }
+    });
+  } else {
+    res.status(401).send("Incorrect security question provided.")
+  }
 })
 
 export default app.listen(PORT, () => console.log(`API server ready on http://localhost:${PORT}`))
