@@ -19,7 +19,7 @@ app.use(express.json())
 
 app.post('/api/v1/mailer', (req, res)=>{
 
-  const {name, email, phone, message } = req.body
+  const {name, email, phone, message, answer } = req.body
 
   let transporter = nodemailer.createTransport({
     host: process.env.HOST,
@@ -41,14 +41,18 @@ app.post('/api/v1/mailer', (req, res)=>{
       </div>`
   };
 
-  transporter.sendMail(mailOptions, (err, data) => {
-    if (err) {
-      console.log("Error " + err);
-      res.status(417).send("Unable to send message. Please try again later.")
-    } else {
-      res.status(200).send({message: "The cyber monkies delivered your email successfully!", info: data});
-    }
-  });
+  if (answer === parseInt(process.env.ANSWER)) {
+    transporter.sendMail(mailOptions, (err, data) => {
+      if (err) {
+        console.log("Error " + err);
+        res.status(417).send("Unable to send message. Please try again later.")
+      } else {
+        res.status(200).send({message: "The cyber monkies delivered your email successfully!", info: data});
+      }
+    });
+  } else {
+    res.status(401).send("Incorrect security question provided.")
+  }
 })
 
 export default app.listen(PORT, () => console.log(`API server ready on http://localhost:${PORT}`))
