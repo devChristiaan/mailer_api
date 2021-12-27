@@ -26,7 +26,7 @@ app.post('/api/v1/mailer', (req, res)=>{
     port: 465,
     secure: true,
     auth: {
-      user: process.env.USERNAME,
+      user: process.env.USER,
       pass: process.env.PASSWORD,
     },
   });

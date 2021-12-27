@@ -23,7 +23,7 @@
   "homepage": "https://github.com/devChristiaan/mailer_api#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
+    "dotenv": "^8.6.0",
     "express": "^4.17.2",
     "nodemailer": "^6.7.2"
   }
