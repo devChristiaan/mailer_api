@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 9001
 
 const corsOptions = {
   origin: process.env.ORIGIN_URL,
+  allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['POST']
 }
 
