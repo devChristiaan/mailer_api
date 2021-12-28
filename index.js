@@ -11,6 +11,15 @@ const PORT = process.env.PORT || 9001
 
 app.use(express.json())
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", process.env.ORIGIN_URL);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.post('/api/v1/mailer', (req, res)=>{
 
   const {name, email, phone, message, answer } = req.body
