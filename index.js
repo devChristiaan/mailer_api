@@ -9,11 +9,6 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 9001
 
-const corsOptions = {
-  origin: process.env.ORIGIN_URL,
-}
-
-app.use(cors(corsOptions))
 app.use(express.json())
 
 app.post('/api/v1/mailer', (req, res)=>{
