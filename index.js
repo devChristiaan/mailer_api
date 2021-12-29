@@ -11,8 +11,8 @@ const PORT = process.env.PORT || 9001
 
 const corsOptions = {
   origin: process.env.ORIGIN_URL,
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  methods: ['POST']
+  allowedHeaders: ['Content-Type'],
+  methods: ['POST', 'OPTIONS'],
 }
 
 app.use(cors(corsOptions))
@@ -42,13 +42,13 @@ app.post('/api/v1/mailer', (req, res)=>{
       </div>`
   };
 
-  if (answer === parseInt(process.env.ANSWER)) {
+  if (parseInt(answer) === parseInt(process.env.ANSWER)) {
     transporter.sendMail(mailOptions, (err, data) => {
       if (err) {
         console.log("Error " + err);
         res.status(417).send("Unable to send message. Please try again later.")
       } else {
-        res.status(200).send({message: "The cyber monkies delivered your email successfully!", info: data});
+        res.status(200).send(JSON.stringify({message: "The cyber monkies delivered your email successfully!", info: data}));
       }
     });
   } else {
